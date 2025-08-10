@@ -10,111 +10,17 @@ export type Database = {
   // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
-      categories: {
-        Row: {
-          color: string
-          created_at: string | null
-          icon: string
-          id: string
-          name: string
-          type: string
-        }
-        Insert: {
-          color: string
-          created_at?: string | null
-          icon: string
-          id?: string
-          name: string
-          type: string
-        }
-        Update: {
-          color?: string
-          created_at?: string | null
-          icon?: string
-          id?: string
-          name?: string
-          type?: string
-        }
-        Relationships: []
-      }
-      currency_entries: {
-        Row: {
-          created_at: string
-          date: string
-          description: string
-          id: string
-          inr_amount: number
-          pln_amount: number
-        }
-        Insert: {
-          created_at?: string
-          date: string
-          description: string
-          id?: string
-          inr_amount: number
-          pln_amount: number
-        }
-        Update: {
-          created_at?: string
-          date?: string
-          description?: string
-          id?: string
-          inr_amount?: number
-          pln_amount?: number
-        }
-        Relationships: []
-      }
-      transactions: {
-        Row: {
-          amount: number
-          category_id: string | null
-          created_at: string | null
-          date: string
-          description: string
-          id: string
-          type: string
-        }
-        Insert: {
-          amount: number
-          category_id?: string | null
-          created_at?: string | null
-          date: string
-          description: string
-          id?: string
-          type: string
-        }
-        Update: {
-          amount?: number
-          category_id?: string | null
-          created_at?: string | null
-          date?: string
-          description?: string
-          id?: string
-          type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "transactions_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "categories"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      create_currency_entries_table: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
