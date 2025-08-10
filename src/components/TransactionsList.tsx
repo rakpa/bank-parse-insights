@@ -11,16 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-interface Transaction {
-  id: string;
-  date: string;
-  description: string;
-  amount: number;
-  type: 'credit' | 'debit';
-  category?: string;
-  balance?: number;
-}
+import type { Transaction } from "@/types/transaction";
 
 interface TransactionsListProps {
   transactions: Transaction[];

@@ -1,15 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, DollarSign, Activity } from "lucide-react";
-
-interface Transaction {
-  id: string;
-  date: string;
-  description: string;
-  amount: number;
-  type: 'credit' | 'debit';
-  category?: string;
-  balance?: number;
-}
+import type { Transaction } from "@/types/transaction";
 
 interface DashboardStatsProps {
   transactions: Transaction[];

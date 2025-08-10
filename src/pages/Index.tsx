@@ -5,72 +5,70 @@ import { DashboardStats } from "@/components/DashboardStats";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart3, PieChart, TrendingUp } from "lucide-react";
-
-interface Transaction {
-  id: string;
-  date: string;
-  description: string;
-  amount: number;
-  type: 'credit' | 'debit';
-  category?: string;
-  balance?: number;
-}
+import type { Transaction } from "@/types/transaction";
+import { parseTransactionsFromPdf } from "@/lib/pdfParser";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
-
-  // Mock data for demonstration
-  const sampleTransactions: Transaction[] = [
-    {
-      id: "1",
-      date: "2024-01-15",
-      description: "Direct Deposit - Salary",
-      amount: 3500.00,
-      type: "credit",
-      category: "Income",
-      balance: 5200.00
-    },
-    {
-      id: "2", 
-      date: "2024-01-14",
-      description: "Grocery Store Purchase",
-      amount: -125.50,
-      type: "debit",
-      category: "Food & Dining",
-      balance: 1700.00
-    },
-    {
-      id: "3",
-      date: "2024-01-13", 
-      description: "Coffee Shop",
-      amount: -4.75,
-      type: "debit",
-      category: "Food & Dining",
-      balance: 1825.50
-    },
-    {
-      id: "4",
-      date: "2024-01-12",
-      description: "Online Transfer",
-      amount: 1000.00,
-      type: "credit", 
-      category: "Transfer",
-      balance: 1830.25
-    }
-  ];
+  const { toast } = useToast();
 
   const handleFileSelect = async (file: File) => {
     setIsProcessing(true);
-    
-    // Simulate PDF processing delay
-    setTimeout(() => {
-      setTransactions(sampleTransactions);
+    try {
+      const parsed = await parseTransactionsFromPdf(file);
+      setTransactions(parsed);
+    } catch (error: any) {
+      toast({
+        title: "Unable to parse PDF",
+        description: error?.message || "Please ensure the statement is a text-based PDF.",
+        variant: "destructive",
+      });
+    } finally {
       setIsProcessing(false);
-    }, 2000);
+    }
   };
 
   const loadSampleData = () => {
+    const sampleTransactions: Transaction[] = [
+      {
+        id: "1",
+        date: "2024-01-15",
+        description: "Direct Deposit - Salary",
+        amount: 3500.0,
+        type: "credit",
+        category: "Income",
+        balance: 5200.0,
+      },
+      {
+        id: "2",
+        date: "2024-01-14",
+        description: "Grocery Store Purchase",
+        amount: -125.5,
+        type: "debit",
+        category: "Food & Dining",
+        balance: 1700.0,
+      },
+      {
+        id: "3",
+        date: "2024-01-13",
+        description: "Coffee Shop",
+        amount: -4.75,
+        type: "debit",
+        category: "Food & Dining",
+        balance: 1825.5,
+      },
+      {
+        id: "4",
+        date: "2024-01-12",
+        description: "Online Transfer",
+        amount: 1000.0,
+        type: "credit",
+        category: "Transfer",
+        balance: 1830.25,
+      },
+    ];
     setTransactions(sampleTransactions);
   };
 
@@ -87,7 +85,7 @@ const Index = () => {
         {transactions.length === 0 ? (
           <div className="space-y-8">
             <FileUpload onFileSelect={handleFileSelect} />
-            
+
             {isProcessing && (
               <Card className="max-w-2xl mx-auto">
                 <CardContent className="p-6 text-center">
@@ -108,7 +106,7 @@ const Index = () => {
         ) : (
           <div className="space-y-8">
             <DashboardStats transactions={transactions} />
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
               <Card>
                 <CardHeader>
@@ -121,7 +119,7 @@ const Index = () => {
                   <p className="text-muted-foreground">Coming soon - Monthly spending analysis</p>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
@@ -133,7 +131,7 @@ const Index = () => {
                   <p className="text-muted-foreground">Coming soon - Expense categorization</p>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
@@ -146,14 +144,11 @@ const Index = () => {
                 </CardContent>
               </Card>
             </div>
-            
+
             <TransactionsList transactions={transactions} />
-            
+
             <div className="text-center pt-4">
-              <Button 
-                onClick={() => setTransactions([])} 
-                variant="outline"
-              >
+              <Button onClick={() => setTransactions([])} variant="outline">
                 Upload New Statement
               </Button>
             </div>
